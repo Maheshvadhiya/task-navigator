@@ -61,4 +61,7 @@ export const todoDetailStyle = StyleSheet.create({
     fontSize: 12,
     color: '#616161',
   },
+  offlineData:{
+    flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: theme.WHITE_COLOR
+  }
 });

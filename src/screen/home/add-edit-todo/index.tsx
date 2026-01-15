@@ -31,7 +31,6 @@ const AddEditTodo = () => {
   const {
     control,
     formState: { errors },
-    setValue,
     handleSubmit,
     reset,
   } = useForm<FormData>({
@@ -64,7 +63,6 @@ const AddEditTodo = () => {
           type: 'success',
           message: `✅ Todo ${id ? 'updated' : 'added'} successfully`,
         });
-
         reset();
         navigation.goBack();
         DeviceEventEmitter.emit('getTodoList');
@@ -76,15 +74,16 @@ const AddEditTodo = () => {
     }
   };
 
-
   const getOneTodo = async () => {
     setLoading(true);
     try {
       const response = await callGetApi(`/todos/${id}`);
       if (response?.status === 200) {
         const setRecords = response?.data;
-        setValue('title', setRecords.title);
-        setValue('status', setRecords.status);
+        reset({
+          title: setRecords.title,
+          status: setRecords.status,
+        });
       }
     } catch (error) {
       console.log('error while get todo by id', error)
@@ -111,11 +110,11 @@ const AddEditTodo = () => {
         keyboardShouldPersistTaps="handled"
         contentContainerStyle={{ flexGrow: 1, paddingBottom: 40 }}
       >
+        <GobackNavbar title={`${id ? 'EDIT' : 'ADD'} TODO`} />
         {loading ? (
           <Loader />
         ) : (
           <View style={addStyle.container}>
-            <GobackNavbar title={`${id ? 'EDIT' : 'ADD'} TODO`} />
             <View style={addStyle.inputMainView}>
               <View style={addStyle.inputContainer}>
                 <Controller
@@ -143,7 +142,6 @@ const AddEditTodo = () => {
                     required: 'Title is required*',
                   }}
                 />
-
                 <Controller
                   control={control}
                   name="status"
@@ -172,7 +170,12 @@ const AddEditTodo = () => {
                   }}
                 />
               </View>
-              <PrimaryButton title="Submit" onPress={handleSubmit(onSubmit)} />
+              <PrimaryButton
+                title="Submit"
+                onPress={handleSubmit(onSubmit)}
+                loading={loading}
+                disabled={loading}
+              />
             </View>
           </View>
         )}

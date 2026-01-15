@@ -45,4 +45,4 @@ const TodoListComp: React.FC<WatchListProps> = ({
   );
 };
 
-export default TodoListComp;
+export default React.memo(TodoListComp);

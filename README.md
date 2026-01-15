@@ -1,17 +1,16 @@
 
 Explanation :- 
 
-Features :
+Install & setup :
 
-   View todo list
-   Add new todo
-   Edit existing todo
-   Delete todo
-   View todo details
-   Offline support (cached data)
-   Deep linking support
-   Pull-to-refresh
-   Clean & modular architecture
+   -git clone https://github.com/Maheshvadhiya/task-navigator
+   -cd task-navigator
+   -npm install
+   -cd ios
+    pod install
+    cd ..
+   -run on android : npx react-native run-android
+   -run on ios : npx react-native run-ios
 
 Tech Stack :
 
@@ -24,17 +23,19 @@ Tech Stack :
    React Hook Form
    SVG Icons
    Toast Massages
+   Dropdown (react-native-select-dropdown)
 
-Install & setup :
+Features :
 
-   -git clone https://github.com/Maheshvadhiya/task-navigator
-   -cd task-navigator
-   -npm install
-   -cd ios
-    pod install
-    cd ..
-   -run on android : npx react-native run-android
-   -run on ios : npx react-native run-ios
+   View todo list
+   Add new todo
+   Edit existing todo
+   Delete todo
+   View todo details
+   Offline support (cached data)
+   Deep linking support
+   Pull-to-refresh
+   Clean & modular architecture
 
  Deep linking :-
 
