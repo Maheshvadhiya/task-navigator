@@ -33,8 +33,8 @@ const Login = () => {
         await AsyncStorage.setItem('token', token.trim());
         navigation.replace('TodoList')
         ToastMessage({
-          message:'You are successfully login.',
-          type:'success'
+          message: 'You are successfully login.',
+          type: 'success'
         })
       }
     } catch (error) {
@@ -55,6 +55,7 @@ const Login = () => {
           autoCapitalize="none"
         />
         <PrimaryButton
+          testID="login-button"
           title="Login"
           onPress={handleLogin}
           containerStyle={{ width: '100%' }}

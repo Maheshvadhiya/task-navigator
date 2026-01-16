@@ -5,7 +5,7 @@ import {
   KeyboardAvoidingView,
   DeviceEventEmitter,
 } from 'react-native';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import Loader from '../../../component/loader';
 import InputComp from '../../../../assets/components/Input';
@@ -21,6 +21,12 @@ import SelectBoxComp from '../../../component/select-box-comp';
 interface FormData {
   title: string;
   status: string;
+  user_id: number | null,
+}
+
+interface UserProps {
+  name: string,
+  id: number
 }
 
 const AddEditTodo = () => {
@@ -28,6 +34,7 @@ const AddEditTodo = () => {
   const route = useRoute();
   const { id } = route.params as { isEdit: boolean, id: number };
   const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
+  const [users, setUsers] = useState<UserProps[]>([]);
   const {
     control,
     formState: { errors },
@@ -37,6 +44,7 @@ const AddEditTodo = () => {
     defaultValues: {
       title: '',
       status: '',
+      user_id: null,
     },
   });
 
@@ -44,12 +52,11 @@ const AddEditTodo = () => {
     setLoading(true);
 
     const payload = {
-      user_id: 8263951,
+      user_id: data.user_id,
       title: data.title,
       status: data.status,
       due_on: new Date().toISOString(),
     };
-
     try {
       const response = id
         ? await callPutApi(`/todos/${id}`, payload)
@@ -79,10 +86,11 @@ const AddEditTodo = () => {
     try {
       const response = await callGetApi(`/todos/${id}`);
       if (response?.status === 200) {
-        const setRecords = response?.data;
+        const setRecords: FormData = response?.data;
         reset({
-          title: setRecords.title,
-          status: setRecords.status,
+          title: setRecords?.title,
+          status: setRecords?.status,
+          user_id: setRecords?.user_id
         });
       }
     } catch (error) {
@@ -92,11 +100,27 @@ const AddEditTodo = () => {
     }
   };
 
+
+  const activeUserList = useCallback(async () => {
+    try {
+      const response = await callGetApi('/users?status=active');
+      if (response?.status === 200) {
+        setUsers(response?.data)
+      }
+    } catch (error) {
+      console.log('Error fetching active users', error);
+    }
+  }, []);
+
   useEffect(() => {
     if (id) {
       getOneTodo();
     }
-  }, [id])
+  }, [id]);
+
+  useEffect(() => {
+    activeUserList();
+  }, []);
 
   return (
     <KeyboardAvoidingView
@@ -118,10 +142,47 @@ const AddEditTodo = () => {
             <View style={addStyle.inputMainView}>
               <View style={addStyle.inputContainer}>
                 <Controller
+                  control={control}
+                  name="user_id"
+                  render={({ field }) => (
+                    <View style={{ gap: 3 }}>
+                      <SelectBoxComp
+                        starRequired
+                        label={'User'}
+                        title={'- Select'}
+                        data={users?.map(
+                          (item: { name: string }) => item?.name,
+                        )}
+                        onSelect={(value: string) => {
+                          const id = users?.find(
+                            (item: { name: string }) => item?.name === value,
+                          )?.id;
+                          field.onChange(id);
+                        }}
+                        defaultValue={
+                          users?.find(
+                            (item: { id: number }) => item?.id === field?.value,
+                          )?.name
+                        }
+                      />
+                      {errors.user_id && (
+                        <ValidationComp
+                          title={errors?.user_id?.message}
+                          style={{ marginLeft: 6 }}
+                        />
+                      )}
+                    </View>
+                  )}
+                  defaultValue={null}
+                  rules={{
+                    required: 'User is required*',
+                  }}
+                />
+                <Controller
                   name="title"
                   control={control}
                   render={({ field: { onChange, onBlur, value } }) => (
-                    <View style={{ gap: 4 }}>
+                    <View style={{ gap: 3 }}>
                       <InputComp
                         starRequired
                         label={'Title'}
@@ -146,7 +207,7 @@ const AddEditTodo = () => {
                   control={control}
                   name="status"
                   render={({ field: { onChange, value } }) => (
-                    <View style={{ gap: 4 }}>
+                    <View style={{ gap: 3 }}>
                       <SelectBoxComp
                         starRequired
                         label={'Status'}

@@ -1,6 +1,7 @@
 
 Explanation :- 
 
+
 Install & setup :
 
    -git clone https://github.com/Maheshvadhiya/task-navigator
@@ -11,6 +12,7 @@ Install & setup :
     cd ..
    -run on android : npx react-native run-android
    -run on ios : npx react-native run-ios
+
 
 Tech Stack :
 
@@ -25,6 +27,7 @@ Tech Stack :
    Toast Massages
    Dropdown (react-native-select-dropdown)
 
+
 Features :
 
    View todo list
@@ -37,7 +40,8 @@ Features :
    Pull-to-refresh
    Clean & modular architecture
 
- Deep linking :-
+
+Deep linking :-
 
    Todo List : 	e.g : tasknavigator://todos
    Todo Detail : 	e.g : tasknavigator://todo/12
@@ -62,6 +66,13 @@ Login to App :-
    Enter GoRest API Token 
    (e.g 6b01cd4869dc79104d7e99641d4623048c6dc1162b0fb320fa773631109c4e63)
    then click login 
+
+Unit Testing :-
+
+   -Unit tests are implemented using Jest and @testing-library/react-native
+   -A test is added for the Login screen to validate core business logic
+   -The test ensures that an error alert is displayed when the user attempts to log in without providing an API token
+   -External dependencies such as navigation, alerts, and toast messages are mocked to isolate component behavior
 
 
 Architecture Overview :-
